@@ -3,6 +3,16 @@ html {
   overflow: hidden;
 }
 
+#overlay, #overlay:link, #overlay:visited {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index:1;
+  color: #fdfafa;
+  font-family: Arial;
+  font-size: 24px;
+}
+
 
 body {
   margin: 0 0 0 0;

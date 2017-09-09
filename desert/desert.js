@@ -135,11 +135,6 @@ function renderGrid() {
       gfx.fillRect(x*SCALE,y*SCALE,SCALE,SCALE);
     }
   }
-
-  gfx.fillStyle = "#fdfafa";
-  gfx.font = "24px Arial";
-  gfx.fillText("Click anywhere to spawn a blob of sand.",10,50);
-
 }
 
 function blendColors(c0, c1, p) {
