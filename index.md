@@ -1,3 +1,3 @@
 ## My Great Works so far:
 
-* [A very crappy sand simulation](/sand/sand.html)
+* [Very Impressive desert simulator](/desert/desert.html)
