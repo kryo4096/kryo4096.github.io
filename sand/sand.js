@@ -118,9 +118,9 @@ function renderGrid() {
       // draw filled out cells as black
       if(cell(x,y)){
         if(cell(x,y-1)){
-          gfx.fillStyle="#00aaaa"
+          gfx.fillStyle="#c2b180"
         } else {
-          gfx.fillStyle="#00fafa"
+          gfx.fillStyle="#ac9653"
         }
       } else {
         gfx.fillStyle="#000000"
