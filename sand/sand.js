@@ -118,12 +118,12 @@ function renderGrid() {
       // draw filled out cells as black
       if(cell(x,y)){
         if(cell(x,y-1)){
-          gfx.fillStyle="#c2b180"
-        } else {
           gfx.fillStyle="#ac9653"
+        } else {
+          gfx.fillStyle="#c2b180"
         }
       } else {
-        gfx.fillStyle="#000000"
+        gfx.fillStyle="#8090C2"
       }
       gfx.fillRect(x*SCALE,y*SCALE,SCALE,SCALE);
     }
