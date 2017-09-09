@@ -3,7 +3,7 @@ var grid_l;
 var canvas;
 var gfx;
 
-var SCALE =5;
+var SCALE = 20;
 var WIDTH = 160;
 var HEIGHT = 90;
 
@@ -163,7 +163,7 @@ function iterate() {
   grid_l=false;
 }
 
-window.addEventListener('resize', init, true);
+//window.addEventListener('resize', init, true);
 
 init();
 setInterval(iterate,10);
