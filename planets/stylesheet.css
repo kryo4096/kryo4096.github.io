@@ -1,0 +1,32 @@
+html {
+  height:100%;
+  overflow: hidden;
+}
+
+#overlay, #overlay:link, #overlay:visited {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index:1;
+  color: #fdfafa;
+  font-family: Arial;
+  font-size: 18px;
+  user-select: none;
+}
+
+canvas{
+  height: 100%;
+  width: 100%;
+}
+
+button{
+  border-radius: 3px;
+  background-color: #fdfafabb;
+  border-style: solid;
+}
+
+body {
+  margin: 0 0 0 0;
+  height:100%;
+  overflow: hidden;
+}

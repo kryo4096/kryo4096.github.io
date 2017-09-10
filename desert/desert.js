@@ -46,7 +46,7 @@ function init(){
   // get 2d graphics context
   gfx = canvas.getContext("2d");
 
-  // calculate canvas dimensions, by dividing document size by BLOCK_SIZE
+  // calculate world dimensions, by dividing document size by BLOCK_SIZE
   height = Math.ceil(document.body.scrollHeight / BLOCK_SIZE);
   width = Math.ceil(document.body.scrollWidth / BLOCK_SIZE);
 
