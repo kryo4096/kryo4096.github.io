@@ -1,9 +1,12 @@
 var grid;
 var grid_l;
+
+var random_grid;
+
 var canvas;
 var gfx;
 
-var SCALE = 20;
+var SCALE = 15;
 var WIDTH = 160;
 var HEIGHT = 90;
 
@@ -24,6 +27,9 @@ function init(){
   canvas = {};
   grid = {};
   gfx = {};
+  cactus_grid = {};
+
+
 
 
 
@@ -39,14 +45,18 @@ function init(){
 
 
   grid = Array2D(WIDTH*HEIGHT);
+  random_grid = Array2D(WIDTH*HEIGHT);
+
+  for(x = 0; x<WIDTH; x++){
+    for(y = 0; y<HEIGHT; y++){
+      random_grid[x][y]=Math.random();
+    }
+  }
+
 
 
 
   canvas.addEventListener('click', function(e) {
-
-      // use pageX and pageY to get the mouse position
-      // relative to the browser window
-
       var mouse = {
           x: e.pageX - canvas.getBoundingClientRect().left,
           y: e.pageY - canvas.getBoundingClientRect().top,
@@ -57,15 +67,11 @@ function init(){
       var y = Math.ceil(mouse.y/SCALE);
       for(var xx = -BRUSH_SIZE/2; xx <= BRUSH_SIZE/2; xx++){
         for(var yy = -BRUSH_SIZE/2; yy <= BRUSH_SIZE/2; yy++){
-          grid[x+xx*2][y+yy*2]=true;
+          grid[x+xx][y+yy]=true;
         }
       }
 
       grid_l = false;
-
-      // now you have local coordinates,
-      // which consider a (0,0) origin at the
-      // top-left of canvas element
   }, false);
 
 }
@@ -117,17 +123,23 @@ function renderGrid() {
     for(y = 0; y<HEIGHT; y++){
       // draw filled out cells as black
       if(cell(x,y)){
-        if(cell(x,y-1)){
-          gfx.fillStyle="#00aaaa"
-        } else {
-          gfx.fillStyle="#00fafa"
+        gfx.fillStyle= blendColors("#b1a070","#c2b180",random_grid[x][y]);
+        if(!cell(x,y-1)&&cell(x,y+1)&&random_grid[x][Math.floor(y/10)]<0.1){
+          gfx.fillStyle="#002900";
+          gfx.fillRect(x*SCALE+SCALE/4,(y-1.5)*SCALE,SCALE/2,SCALE*1.5);
+          gfx.fillStyle = "#b1a070";
         }
       } else {
-        gfx.fillStyle="#000000"
+        gfx.fillStyle="#8090C2"
       }
       gfx.fillRect(x*SCALE,y*SCALE,SCALE,SCALE);
     }
   }
+}
+
+function blendColors(c0, c1, p) {
+    var f=parseInt(c0.slice(1),16),t=parseInt(c1.slice(1),16),R1=f>>16,G1=f>>8&0x00FF,B1=f&0x0000FF,R2=t>>16,G2=t>>8&0x00FF,B2=t&0x0000FF;
+    return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
 }
 
 function iterate() {
@@ -163,7 +175,7 @@ function iterate() {
   grid_l=false;
 }
 
-//window.addEventListener('resize', init, true);
+window.addEventListener('resize', init, true);
 
 init();
 setInterval(iterate,10);
