@@ -1,3 +1,3 @@
 ## My Great Works so far:
 
-* [A just mildly dissapointing desert simulator.](/desert/desert.html)
+* [A just mildly disappointing desert simulator.](/desert/desert.html)
