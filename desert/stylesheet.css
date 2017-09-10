@@ -10,8 +10,16 @@ html {
   z-index:1;
   color: #fdfafa;
   font-family: Arial;
-  font-size: 24px;
+  font-size: 18px;
+  user-select: none;
 }
+
+button{
+  border-radius: 3px;
+  background-color: #fdfafabb;
+  border-style: solid;
+}
+
 
 
 body {
