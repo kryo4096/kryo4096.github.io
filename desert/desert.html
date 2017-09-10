@@ -2,16 +2,15 @@
 <html>
   <header>
     <meta charset="utf8">
-    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="../app.css">
   </header>
   <body>
     <canvas id = "frame">
     </canvas>
     <div id="overlay">
 
-      Click anywhere to spawn/remove a blob of sand.
+      <button onclick="location.href='..'">←</button>&nbsp;Click anywhere to spawn / remove a blob of sand.
       <br>
-      <button onclick="location.href='..'">←</button>&nbsp;
       <button id='mode' onclick="brush_mode = !brush_mode; document.getElementById('mode').innerHTML=brush_mode?'Mode: Spawn':'Mode: Remove'; ">Mode: Spawn</button>&nbsp;
       <button onclick="generate()">Random</button>&nbsp;
       <button onclick="init()">Reset</button>&nbsp;

@@ -48,8 +48,6 @@ class Vec2 {
     return Vec2.scalarMul(this,s);
   }
 
-
-
 }
 
 class Planet {
@@ -174,6 +172,5 @@ function render() {
   gfx.closePath();
   gfx.strokeStyle = "#fdfafa";
   gfx.stroke();
-
 
 }
