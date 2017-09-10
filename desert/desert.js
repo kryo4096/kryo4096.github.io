@@ -47,12 +47,13 @@ function init(){
   gfx = canvas.getContext("2d");
 
   // calculate world dimensions, by dividing document size by BLOCK_SIZE
-  height = Math.ceil(document.body.scrollHeight / BLOCK_SIZE);
   width = Math.ceil(document.body.scrollWidth / BLOCK_SIZE);
+  height = Math.ceil(document.body.scrollHeight / BLOCK_SIZE);
+
 
   // set canvas dimensions
   canvas.width = width * BLOCK_SIZE;
-  canvas.height = width * BLOCK_SIZE;
+  canvas.height = height * BLOCK_SIZE;
 
   //create grids
   worldGrid = Grid2D(width*height);
