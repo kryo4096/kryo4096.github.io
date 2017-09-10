@@ -8,8 +8,13 @@
     <canvas id = "frame">
     </canvas>
     <div id="overlay">
-      <a href=".."> ← Go Back </a> <br>
-      Click anywhere to spawn a blob of sand.
+
+      Click anywhere to spawn/remove a blob of sand.
+      <br>
+      <button onclick="location.href='..'">←</button>&nbsp;
+      <button id='mode' onclick="brush_mode = !brush_mode; document.getElementById('mode').innerHTML=brush_mode?'Mode: Spawn':'Mode: Remove'; ">Mode: Spawn</button>&nbsp;
+      <button onclick="generate()">Random</button>&nbsp;
+      <button onclick="init()">Reset</button>&nbsp;
     </div>
     <script src="desert.js"></script>
   </body>

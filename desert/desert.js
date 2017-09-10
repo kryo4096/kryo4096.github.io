@@ -1,161 +1,147 @@
-var grid;
-var grid_l;
+//Size of one block
+var BLOCK_SIZE = 15;
+//Size of the sand blobs
+var BLOB_SIZE = 2;
+//RNG density
+var DENSITY = 0.1;
 
-var random_grid;
+// global variables
+var width; // width of the world
+var height; //height of the world
 
+// brush mode
+var brush_mode = true;
+
+var worldGrid; // world grid of size width*height
+var worldGridInUse; // locking mechanism
+
+var randomGrid; // grid filled with random numbers at initialization, used for cacti and sand texturing
+
+// Canvas and 2d context for convenient access
 var canvas;
 var gfx;
 
-var SCALE = 15;
-var WIDTH = 160;
-var HEIGHT = 90;
-
-var BRUSH_SIZE = 2;
-
-function Array2D(width,height){
-  var g;
-  g = new Array(width);
+// Creates a new 2-dimensional grid with the specified height and width
+function Grid2D(width,height){
+  var grid;
+  grid = new Array(width);
   for(x = 0; x<width; x++){
-    g[x] = new Array(height);
+    grid[x] = new Array(height);
   }
 
-  return g;
+  return grid;
 }
 
 function init(){
 
+  //clear everything
   canvas = {};
-  grid = {};
   gfx = {};
+  worldGrid = {};
   cactus_grid = {};
 
-
-
-
-
+  // get canvas
   canvas = document.getElementById("frame");
+
+  // get 2d graphics context
   gfx = canvas.getContext("2d");
 
-  HEIGHT = Math.ceil(document.body.scrollHeight / SCALE);
-  WIDTH = Math.ceil(document.body.scrollWidth / SCALE);
+  // calculate canvas dimensions, by dividing document size by BLOCK_SIZE
+  height = Math.ceil(document.body.scrollHeight / BLOCK_SIZE);
+  width = Math.ceil(document.body.scrollWidth / BLOCK_SIZE);
 
-  canvas.width = WIDTH * SCALE;
-  canvas.height = WIDTH * SCALE;
+  // set canvas dimensions
+  canvas.width = width * BLOCK_SIZE;
+  canvas.height = width * BLOCK_SIZE;
 
+  //create grids
+  worldGrid = Grid2D(width*height);
+  randomGrid = Grid2D(width*height);
 
-
-  grid = Array2D(WIDTH*HEIGHT);
-  random_grid = Array2D(WIDTH*HEIGHT);
-
-  for(x = 0; x<WIDTH; x++){
-    for(y = 0; y<HEIGHT; y++){
-      random_grid[x][y]=Math.random();
+  // fill randomGrid with random values
+  for(x = 0; x<width; x++){
+    for(y = 0; y<height; y++){
+      randomGrid[x][y]=Math.random();
     }
   }
 
 
 
-
-  canvas.addEventListener('click', function(e) {
-      var mouse = {
-          x: e.pageX - canvas.getBoundingClientRect().left,
-          y: e.pageY - canvas.getBoundingClientRect().top,
-      }
-
-      grid_l = true;
-      var x = Math.ceil(mouse.x/SCALE);
-      var y = Math.ceil(mouse.y/SCALE);
-      for(var xx = -BRUSH_SIZE/2; xx <= BRUSH_SIZE/2; xx++){
-        for(var yy = -BRUSH_SIZE/2; yy <= BRUSH_SIZE/2; yy++){
-          grid[x+xx][y+yy]=true;
-        }
-      }
-
-      grid_l = false;
-  }, false);
-
 }
 
-
-function cell(x, y){
-  if(x == WIDTH){
+// cell-probing
+function getBlock(x, y){
+  if(x >= width){
+      return false;
+  }
+  // add fixed ground
+  if(y >= height - 1){
       return true;
   }
-  if(y == HEIGHT){
-      return true;
+  if(x < 0){
+       return false;
   }
-  if(x == -1){
-       return true;
-  }
-  if(y == -1) {
-       return true;
+  if(y < 0) {
+       return false;
   }
 
-  return grid[x][y];
+  return worldGrid[x][y];
+}
+
+// set block at (x,y) to bool specified by solid
+function setBlock(x, y, solid){
+  if(x >= width){
+      return;
+  }
+  // add fixed ground
+  if(y >= height - 1){
+      return;
+  }
+  if(x < 0){
+       return;
+  }
+  if(y < 0) {
+       return;
+  }
+
+  worldGrid[x][y] = solid;
 }
 
 
-//randomly populate grid
-function generate(density) {
-  grid_l = true; // signalise that the grid is being manipulated
+//randomly populate worldGrid
+function generate() {
+  if(worldGridInUse) return;
+  worldGridInUse=true;
 
-  // grid populataion
-  for(x = 0; x<WIDTH; x++){
-    for(y = 0; y<HEIGHT; y++){
-      grid[x][y]=Math.random() < density;
+  // grid population
+  for(x = 0; x<width; x++){
+    for(y = 0; y<height; y++){
+    if(Math.random() < DENSITY)
+      setBlock(x,y,true);
     }
   }
+  worldGridInUse=false;
 
-  grid_l = false; // signalise that the grid is no longer manipulated
 }
 
-//render grid
-function renderGrid() {
-
-  if(grid_l){
-    return; // dont render if grid is being manipulated
-  }
-
-  gfx.clearRect(0,0,WIDTH*SCALE,HEIGHT*SCALE); //clear the canvas
-
-  // iterate through grid
-  for(x = 0; x<WIDTH; x++){
-    for(y = 0; y<HEIGHT; y++){
-      // draw filled out cells as black
-      if(cell(x,y)){
-        gfx.fillStyle= blendColors("#b1a070","#c2b180",random_grid[x][y]);
-        if(!cell(x,y-1)&&cell(x,y+1)&&random_grid[x][Math.floor(y/10)]<0.1){
-          gfx.fillStyle="#002900";
-          gfx.fillRect(x*SCALE+SCALE/4,(y-1.5)*SCALE,SCALE/2,SCALE*1.5);
-          gfx.fillStyle = "#b1a070";
-        }
-      } else {
-        gfx.fillStyle="#8090C2"
-      }
-      gfx.fillRect(x*SCALE,y*SCALE,SCALE,SCALE);
-    }
-  }
-}
-
-function blendColors(c0, c1, p) {
-    var f=parseInt(c0.slice(1),16),t=parseInt(c1.slice(1),16),R1=f>>16,G1=f>>8&0x00FF,B1=f&0x0000FF,R2=t>>16,G2=t>>8&0x00FF,B2=t&0x0000FF;
-    return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
-}
-
+// does one simulation step
 function iterate() {
-  var grid_n = Array2D(WIDTH,HEIGHT);
+  if(worldGridInUse) return;
+  worldGridInUse=true;
 
-  for(x = 0; x<WIDTH; x++){
-    for(y = 0; y<HEIGHT; y++){
+  var grid_n = Grid2D(width,height);
 
-      if(cell(x,y)){
-        if(!cell(x,y+1)) grid_n[x][y+1] = true;
-        else if(!cell(x+1,y+1)&&!cell(x-1,y+1)){
-          if(Math.random() > 0.5) grid_n[x+1][y+1] = true;
-          else grid_n[x-1][y+1] = true;
-        } else if(!cell(x+1,y+1)){
+  for(x = 0; x<width; x++){
+    for(y = 0; y<height; y++){
+
+      if(getBlock(x,y)){
+        if(!getBlock(x,y+1)) grid_n[x][y+1] = true;
+        else if(!getBlock(x+1,y+1) && !getBlock(x-1,y+1) && y < height-1){
+          if(Math.random() > 0.5 && x < width-1) grid_n[x+1][y+1] = true;
+          else if(x > 0) grid_n[x-1][y+1] = true;
+        } else if(!getBlock(x+1,y+1) && y < height-1 && x < width-1){
           grid_n[x+1][y+1] = true;
-        } else if(!cell(x-1,y+1)){
+        } else if(!getBlock(x-1,y+1) && y < height-1 && x > 0){
           grid_n[x-1][y+1] = true;
         } else {
           grid_n[x][y] = true;
@@ -164,19 +150,76 @@ function iterate() {
 
     }
   }
-
-
-  grid_l= true;
-  for(x = 0; x<WIDTH; x++){
-    for(y = 0; y<HEIGHT; y++){
-        grid[x][y]=grid_n[x][y];
+  for(x = 0; x<width; x++){
+    for(y = 0; y<height; y++){
+        worldGrid[x][y]=grid_n[x][y];
     }
   }
-  grid_l=false;
+
+  worldGridInUse=false;
 }
 
-window.addEventListener('resize', init, true);
+//renders the world
+function render() {
+  if(worldGridInUse) return;
+  worldGridInUse=true;
+
+  gfx.clearRect(0,0,width*BLOCK_SIZE,height*BLOCK_SIZE); //clear the canvas
+
+  // iterate through grid
+  for(x = 0; x<width; x++){
+    for(y = 0; y<height; y++){
+      if(getBlock(x,y)){
+        gfx.fillStyle= blendColors("#b1a070","#c2b180",randomGrid[x][y]);
+
+        // if the conditions for a cactus are fulfilled, draw one
+        if(!getBlock(x,y-1)&&getBlock(x,y+1)&&randomGrid[x][Math.floor(y/10)]<0.1){
+          gfx.fillStyle="#002900";
+          gfx.fillRect(x*BLOCK_SIZE+BLOCK_SIZE/4,(y-1.5)*BLOCK_SIZE,BLOCK_SIZE/2,BLOCK_SIZE*1.5);
+          gfx.fillStyle = "#b1a070";
+        }
+      } else {
+        gfx.fillStyle="#8090C2"
+      }
+      // draw the block
+      gfx.fillRect(x*BLOCK_SIZE,y*BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+    }
+  }
+
+  worldGridInUse=false;
+}
+
+// blends two colors
+function blendColors(c0, c1, p) {
+    var f=parseInt(c0.slice(1),16),t=parseInt(c1.slice(1),16),R1=f>>16,G1=f>>8&0x00FF,B1=f&0x0000FF,R2=t>>16,G2=t>>8&0x00FF,B2=t&0x0000FF;
+    return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
+}
 
 init();
-setInterval(iterate,10);
-setInterval(renderGrid,10);
+//reinitialize world on resize
+window.addEventListener('resize', init, true);
+//mouse-listener for sand-spawning
+canvas.addEventListener('click', function(e) {
+
+    // calculate mouse position
+    var mouse = {
+        x: e.pageX,
+        y: e.pageY,
+    }
+    if(mouse.x==0) return;
+
+    var x = Math.ceil(mouse.x/BLOCK_SIZE);
+    var y = Math.ceil(mouse.y/BLOCK_SIZE);
+    for(var xx = -BLOB_SIZE/2; xx <= BLOB_SIZE/2; xx++){
+      for(var yy = -BLOB_SIZE/2; yy <= BLOB_SIZE/2; yy++){
+        setBlock(x+xx,y+yy,brush_mode);
+      }
+    }
+}, false);
+
+
+setInterval(iterate,15);
+setInterval(render,1);
+setInterval(function() {
+  world_grid_lock = false;
+},1000);
