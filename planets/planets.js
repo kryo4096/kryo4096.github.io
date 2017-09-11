@@ -167,7 +167,7 @@ function render() {
   gfx.fill();
   gfx.beginPath();
   gfx.lineTo(clickPos.x,clickPos.y);
-  logDelta = clickPos+mouseDelta.logClamp(100).mult(100);
+  logDelta = clickPos+mouseDelta.logClamp(100).mult(10000);
   gfx.lineTo(logDelta.x,logDelta.y);
   gfx.closePath();
   gfx.strokeStyle = "#fdfafa";
