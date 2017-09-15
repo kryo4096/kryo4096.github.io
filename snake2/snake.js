@@ -43,7 +43,7 @@ var rId = setInterval(render,1);
 var position = new Vec2(width/2,height/2);
 var angle = 0;
 
-var turn = Math.PI/16;
+var turn = Math.PI/32;
 
 var d_angle = turn;
 var speed = 6;
