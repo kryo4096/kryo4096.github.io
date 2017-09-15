@@ -46,18 +46,19 @@ var angle = 0;
 var turn = Math.PI/16;
 
 var d_angle = turn;
-var speed = 12;
+var speed = 6;
 var score = 0;
-
+var ticks = 0;
 positions = new Array(0);
 
 function loop() {
+  ticks++;
   angle+=d_angle;
   position = position.add(new Vec2(Math.cos(angle)*speed,Math.sin(angle)*speed));
   var collision = false;
 
-  positions.forEach(p => {
-    if(Vec2.distance(position,p)<=4) collision = true;
+  positions.forEach((p,i) => {
+    if(Vec2.distance(position,p)<=5 && i > 10) collision = true;
   })
 
   if(!position.isWithin(0,0,width,height)){
