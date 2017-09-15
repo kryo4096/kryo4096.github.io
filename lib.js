@@ -80,4 +80,6 @@ class Mat2 {
   transform(vec){
     return new Vec2(this.a11*vec.x+this.a12*vec.y,this.a21*vec.x+this.a22*vec.y);
   }
+
+
 }
