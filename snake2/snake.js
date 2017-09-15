@@ -58,7 +58,7 @@ function loop() {
   var collision = false;
 
   positions.forEach((p,i) => {
-    if(Vec2.distance(position,p)<=5 && i > 10) collision = true;
+    if(Vec2.distance(position,p)<=8 && positions.length-10 > i) collision = true;
   })
 
   if(!position.isWithin(0,0,width,height)){
@@ -85,6 +85,11 @@ function loop() {
     gfx.fillText("Press any key to restart!",width/2,180);
 
     gfx.strokeStyle = "#cdcaca";
+    gfx.beginPath();
+    gfx.arc(position.x,position.y,5,0,Math.PI*2);
+    gfx.fillStyle = "#fdfafa";
+    gfx.fill();
+    gfx.closePath();
     for(var i = 1; i<positions.length; i++){
       gfx.beginPath();
       gfx.moveTo(positions[i-1].x,positions[i-1].y);
