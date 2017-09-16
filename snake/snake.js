@@ -57,9 +57,12 @@ function loop() {
     if(Vec2.distance(position,p)<=4) collision = true;
   })
 
-  if(!position.isWithin(0,0,width,height)) {
-    collision = true;
-  }
+  if(!position.isWithin(0,0,width,height)) positions.push(-1);
+  
+  if(position.x<0) position.x = width-1;
+  if(position.y<0) position.y = height-1;
+  if(position.x>width) position.x = 0;
+  if(position.y>height) position.y = 0;
 
   if(collision){
     gfx.fillStyle = "#1a2a2a";

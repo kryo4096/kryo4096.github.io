@@ -21,16 +21,6 @@ var randomGrid; // grid filled with random numbers at initialization, used for c
 var canvas;
 var gfx;
 
-// Creates a new 2-dimensional grid with the specified height and width
-function Grid2D(width,height){
-  var grid;
-  grid = new Array(width);
-  for(x = 0; x<width; x++){
-    grid[x] = new Array(height);
-  }
-
-  return grid;
-}
 
 function init(){
 

@@ -55,8 +55,13 @@ class Vec2 {
   add(v){
     return Vec2.add(this,v);
   }
+
   subtract(v){
     return Vec2.subtract(this,v);
+  }
+
+  round(){
+    return new Vec2(Math.round(this.x),Math.round(this.y));
   }
 
 }
@@ -80,6 +85,52 @@ class Mat2 {
   transform(vec){
     return new Vec2(this.a11*vec.x+this.a12*vec.y,this.a21*vec.x+this.a22*vec.y);
   }
+}
 
+class Transform {
+  constructor(position,scale,angle){
+    this.position = position;
+    this.scale = scale;
+    this.scale_m = Mat2.scale(scale);
+    this.angle = angle;
+    this.angle_m = Mat2.rot(angle);
+  }
 
+  static neutral(){
+    return new Transform(Vec2.zero(),1,0);
+  }
+
+  setPosition(pos){
+    this.position = position;
+  }
+  setAngle(angle){
+    this.angle = angle;
+    this.angle_m = Mat2.rot(angle);
+  }
+  setScale(scale) {
+    this.scale = scale;
+    this.scale_m = Mat2.scale(scale);
+  }
+
+  displace(d){
+    setPosition(this.position.add(d));
+  }
+
+  rotate(a){
+    setAngle(this.angle+a);
+  }
+
+  scale(s){
+    setScale(this.scale*s);
+  }
+}
+
+function Grid2D(width,height){
+  var grid;
+  grid = new Array(width);
+  for(x = 0; x<width; x++){
+    grid[x] = new Array(height);
+  }
+
+  return grid;
 }
