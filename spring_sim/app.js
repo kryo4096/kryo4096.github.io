@@ -19,7 +19,7 @@ var ctx = canvas.getContext("2d");
 scale = 100;
 
 // start position
-x = new Vec2(1,4);
+x = new Vec2(0,0);
 
 // start velocity
 v = Vec2.zero();
@@ -49,7 +49,7 @@ function toggle() {
 }
 
 function loop() {
-  
+
   if(!paused) {
     x = x.add(v.mult(delta_t));
 
@@ -82,7 +82,19 @@ function loop() {
   ctx.fill();
   ctx.closePath();
 
+  ctx.beginPath();
+  ctx.arc(center_w,center_h,l*scale,0,2*Math.PI);
+  ctx.stroke();
+  ctx.closePath();
+
 }
+
+canvas.addEventListener("mousedown", e => {
+  v = Vec2.zero();
+  xx = e.pageX - center_w;
+  yy = e.pageY - center_h;
+  x = new Vec2(xx/scale,-yy/scale);
+});
 
 
 
