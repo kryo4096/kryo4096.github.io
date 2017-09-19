@@ -1,5 +1,3 @@
-
-
 class Planet {
   constructor(position, radius, color) {
     this.position = new Vec2(position.x,position.y);
@@ -80,9 +78,9 @@ function loop() {
       planets.push(planet);
     }
   }
-  planets = planets.filter(planet => {
-    return planet.position.isWithin(-10,-10,width+10,height+10);
-  });
+  //planets = planets.filter(planet => {
+  //  return planet.position.isWithin(-10,-10,width+10,height+10);
+//  });
   planets.forEach(planet => {
     planet.update();
     var delta_p = Vec2.subtract(new Vec2(width/2,height/2),planet.position);
