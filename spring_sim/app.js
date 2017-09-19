@@ -65,6 +65,7 @@ function loop() {
 
   ctx.fillStyle = "#2f3f3f";
 
+  ctx.strokeStyle = "#fbfafa44";
   ctx.fillRect(0,0,width,height);
 
   let x_pos = center_w + x.x*scale;
